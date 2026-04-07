@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro · Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: rgba(255,255,255,0.08);
+      --purple: #7c5cfc;
+      --purple-light: #a68cfd;
+      --purple-glow: rgba(124, 92, 252, 0.25);
+      --white: #ffffff;
+      --muted: rgba(255,255,255,0.45);
+      --input-bg: rgba(255,255,255,0.04);
+      --success: #4ade80;
+      --error: #f87171;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 30%, rgba(124,92,252,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(92,124,252,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .map-bg {
+      position: fixed;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 380px;
+      opacity: 0.04;
+      pointer-events: none;
+      filter: blur(0.5px);
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 460px;
+      padding: 24px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen {
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--purple-light);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #fff 40%, var(--purple-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--purple), transparent);
+      opacity: 0.5;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px 14px 44px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder { color: rgba(255,255,255,0.2); }
+
+    input:focus {
+      border-color: var(--purple);
+      background: rgba(124,92,252,0.06);
+      box-shadow: 0 0 0 4px var(--purple-glow);
+    }
+
+    .form-group:focus-within .input-icon { color: var(--purple-light); }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--purple);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.25s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: var(--purple-light);
+      box-shadow: 0 8px 32px rgba(124,92,252,0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:hover::before { opacity: 1; }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .spinner  { display: block; }
+
+    /* Success screen */
+    .success-icon {
+      font-size: 56px;
+      margin-bottom: 20px;
+      animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .success-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 40%, var(--purple-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .success-sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Config notice */
+    .config-notice {
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #fca5a5;
+      margin-bottom: 20px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .config-notice.show { display: block; }
+    .config-notice strong { color: var(--error); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+      z-index: 100;
+      min-width: 260px;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { border-color: rgba(248,113,113,0.3); }
+    .toast-icon { font-size: 18px; }
+
+    /* Success hidden by default */
+    #screenSuccess { display: none; }
+    #screenSuccess.active { display: block; animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 24px 20px; border-radius: 16px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <svg class="map-bg" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M150,20 C130,22 110,30 100,45 C85,60 80,80 75,100 C65,120 50,130 40,150
+             C30,170 35,195 45,215 C55,235 60,255 55,280 C50,305 45,330 60,350
+             C75,370 100,375 125,370 C150,365 170,350 185,330
+             C200,310 205,285 210,260 C215,235 225,215 235,195
+             C245,175 250,150 240,130 C230,110 215,95 210,75
+             C205,55 215,35 200,25 C185,15 165,18 150,20Z"
+          stroke="white" stroke-width="4" fill="none"/>
+  </svg>
+
+  <div class="page-wrapper">
+
+    <div class="config-notice" id="configNotice">
+      ⚠️ <strong>Configura Firebase:</strong> Busca <code>firebaseConfig</code> en el archivo y reemplaza los valores con los de tu proyecto.
+    </div>
+
+    <!-- Formulario principal -->
+    <div class="screen" id="screenForm">
+      <div class="header">
+        <div class="step-label">Registro</div>
+        <h1>¡Bienvenido!</h1>
+        <p class="subtitle">Completa tus datos para continuar</p>
+      </div>
+      <div class="card">
+        <form id="formRegistro" autocomplete="off">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="correo">Correo electrónico</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="correo" placeholder="correo@ejemplo.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Número de teléfono</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📱</span>
+              <input type="tel" id="telefono" placeholder="+57 300 000 0000" required />
+            </div>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span class="btn-text">Registrarme →</span>
+            <div class="spinner"></div>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ÉXITO -->
+    <div id="screenSuccess">
+      <div class="card" style="text-align:center; padding: 48px 28px;">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">¡Te has registrado con éxito!</div>
+        <p class="success-sub">Tus datos han sido guardados correctamente.<br>Bienvenido.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon"></span>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyCcXao1LiyjOeWAcP3QCHAf2I9O7wWenKc",
+      authDomain:        "pagina-6b6f1.firebaseapp.com",
+      projectId:         "pagina-6b6f1",
+      storageBucket:     "pagina-6b6f1.firebasestorage.app",
+      messagingSenderId: "148152543880",
+      appId:            "1:148152543880:web:34c096aacc6da572294d3d"
+    };
+
+    if (firebaseConfig.apiKey === "TU_API_KEY") {
+      document.getElementById("configNotice").classList.add("show");
+    }
+
+    let app, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      db  = getFirestore(app);
+    } catch (e) {
+      console.warn("Firebase no inicializado:", e.message);
+    }
+
+    function showToast(msg, type = "error") {
+      const toast     = document.getElementById("toast");
+      const toastMsg  = document.getElementById("toastMsg");
+      const toastIcon = document.getElementById("toastIcon");
+      toastMsg.textContent  = msg;
+      toastIcon.textContent = type === "success" ? "✅" : "❌";
+      toast.className = `toast ${type} show`;
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    document.getElementById("formRegistro").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!db) {
+        showToast("Configura Firebase primero");
+        return;
+      }
+
+      const nombre   = document.getElementById("nombre").value.trim();
+      const correo   = document.getElementById("correo").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const btn      = document.getElementById("submitBtn");
+
+      btn.classList.add("loading");
+      btn.disabled = true;
+
+      try {
+        await addDoc(collection(db, "registros"), {
+          nombre,
+          correo,
+          telefono,
+          timestamp: serverTimestamp()
+        });
+        document.getElementById("screenForm").style.display = "none";
+        document.getElementById("screenSuccess").classList.add("active");
+      } catch (err) {
+        console.error(err);
+        showToast("Error al guardar. Revisa la consola.");
+      } finally {
+        btn.classList.remove("loading");
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
