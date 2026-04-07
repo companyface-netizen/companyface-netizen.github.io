@@ -385,6 +385,12 @@
     <span id="toastMsg"></span>
   </div>
 
+<!-- El SDK principal de Firebase siempre es necesario y debe listarse primero -->
+<script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-app-compat.js"></script>
+
+<!-- TODO: Agrega los SDK de los productos de Firebase que quieras usar -->
+<!-- Por ejemplo, para Firebase Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-database-compat.js"></script>
 
  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
