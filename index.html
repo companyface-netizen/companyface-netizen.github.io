@@ -386,30 +386,29 @@
   </div>
 
 
-<script type="module">
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+ <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, collection, addDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-apiKey: "AIzaSyCXzSX7i5fnffb6uuh36UXP6lTpRkgWsnA",
-authDomain: "sacamfire.firebaseapp.com",
-projectId: "sacamfire",
-storageBucket: "sacamfire.firebasestorage.app",
-messagingSenderId: "387205438037",
-appId: "1:387205438037:web:3fadb6687723de36e992dc",
-measurementId: "G-VB4T4ZH4ZX"
-};
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyCXzSX7i5fnffb6uuh36UXP6lTpRkgWsnA",
+    authDomain: "sacamfire.firebaseapp.com",
+    projectId: "sacamfire",
+    storageBucket: "sacamfire.firebasestorage.app",
+    messagingSenderId: "387205438037",
+    appId: "1:387205438037:web:3fadb6687723de36e992dc",
+    measurementId: "G-VB4T4ZH4ZX"
+
+  };
 
 
 
-  import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
+    if (firebaseConfig.apiKey === "TU_API_KEY") {
+      document.getElementById("configNotice").classList.add("show");
+    }
 
     let app, db;
     try {
@@ -462,8 +461,7 @@ measurementId: "G-VB4T4ZH4ZX"
         btn.disabled = false;
       }
     });
-
-</script>
+  </script>
 
 </body>
 </html>
