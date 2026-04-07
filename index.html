@@ -385,48 +385,33 @@
     <span id="toastMsg"></span>
   </div>
 
-<script type="module">
-    // Importa las funciones necesarias de Firebase SDK modular para la app y Firestore
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
       getFirestore, collection, addDoc, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // **¡IMPORTANTE!** Actualiza esta configuración con los datos de tu proyecto 'sacamfire'
-    // Puedes encontrarlos en la Consola de Firebase > Configuración del Proyecto > Tus aplicaciones.
     const firebaseConfig = {
-    apiKey: "AIzaSyCXzSX7i5fnffb6uuh36UXP6lTpRkgWsnA",
-
-    authDomain: "sacamfire.firebaseapp.com",
-
-    projectId: "sacamfire",
-
-    storageBucket: "sacamfire.firebasestorage.app",
-
-    messagingSenderId: "387205438037",
-
-    appId: "1:387205438037:web:3fadb6687723de36e992dc",
-
-    measurementId: "G-VB4T4ZH4ZX"
-
+      apiKey:            "AIzaSyCcXao1LiyjOeWAcP3QCHAf2I9O7wWenKc",
+      authDomain:        "pagina-6b6f1.firebaseapp.com",
+      projectId:         "pagina-6b6f1",
+      storageBucket:     "pagina-6b6f1.firebasestorage.app",
+      messagingSenderId: "148152543880",
+      appId:            "1:148152543880:web:34c096aacc6da572294d3d"
     };
 
-    // Esta parte es una verificación para recordar que se debe configurar
-    if (firebaseConfig.apiKey === "TU_API_KEY_DE_SACAMFIRE") { // Asegúrate de que esta condición sea correcta para tu chequeo
+    if (firebaseConfig.apiKey === "TU_API_KEY") {
       document.getElementById("configNotice").classList.add("show");
     }
 
     let app, db;
     try {
-      // Inicializa la aplicación Firebase
       app = initializeApp(firebaseConfig);
-      // Obtiene la instancia de Cloud Firestore
       db  = getFirestore(app);
     } catch (e) {
       console.warn("Firebase no inicializado:", e.message);
     }
 
-    // (Tu función showToast se mantiene igual)
     function showToast(msg, type = "error") {
       const toast     = document.getElementById("toast");
       const toastMsg  = document.getElementById("toastMsg");
@@ -437,17 +422,14 @@
       setTimeout(() => toast.classList.remove("show"), 3500);
     }
 
-    // Escucha el evento de envío del formulario con ID "formRegistro"
     document.getElementById("formRegistro").addEventListener("submit", async (e) => {
-      e.preventDefault(); // Evita que la página se recargue
+      e.preventDefault();
 
-      // Verifica si la base de datos Firestore está inicializada
       if (!db) {
         showToast("Configura Firebase primero");
         return;
       }
 
-      // Obtiene los valores de los campos del formulario
       const nombre   = document.getElementById("nombre").value.trim();
       const correo   = document.getElementById("correo").value.trim();
       const telefono = document.getElementById("telefono").value.trim();
@@ -457,12 +439,11 @@
       btn.disabled = true;
 
       try {
-        // Añade un nuevo documento a la colección "registros" en Firestore
         await addDoc(collection(db, "registros"), {
           nombre,
           correo,
           telefono,
-          timestamp: serverTimestamp() // Usa un timestamp del servidor para la fecha de registro
+          timestamp: serverTimestamp()
         });
         document.getElementById("screenForm").style.display = "none";
         document.getElementById("screenSuccess").classList.add("active");
@@ -474,7 +455,6 @@
         btn.disabled = false;
       }
     });
-</script>
-
+  </script>
 </body>
 </html>
