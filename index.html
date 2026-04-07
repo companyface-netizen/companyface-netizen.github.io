@@ -402,6 +402,15 @@ measurementId: "G-VB4T4ZH4ZX"
 };
 
 
+
+  import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+
     let app, db;
     try {
       app = initializeApp(firebaseConfig);
