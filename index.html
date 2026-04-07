@@ -401,9 +401,58 @@ appId: "1:387205438037:web:3fadb6687723de36e992dc",
 measurementId: "G-VB4T4ZH4ZX"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+    let app, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      db  = getFirestore(app);
+    } catch (e) {
+      console.warn("Firebase no inicializado:", e.message);
+    }
+
+    function showToast(msg, type = "error") {
+      const toast     = document.getElementById("toast");
+      const toastMsg  = document.getElementById("toastMsg");
+      const toastIcon = document.getElementById("toastIcon");
+      toastMsg.textContent  = msg;
+      toastIcon.textContent = type === "success" ? "✅" : "❌";
+      toast.className = `toast ${type} show`;
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    document.getElementById("formRegistro").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!db) {
+        showToast("Configura Firebase primero");
+        return;
+      }
+
+      const nombre   = document.getElementById("nombre").value.trim();
+      const correo   = document.getElementById("correo").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const btn      = document.getElementById("submitBtn");
+
+      btn.classList.add("loading");
+      btn.disabled = true;
+
+      try {
+        await addDoc(collection(db, "registros"), {
+          nombre,
+          correo,
+          telefono,
+          timestamp: serverTimestamp()
+        });
+        document.getElementById("screenForm").style.display = "none";
+        document.getElementById("screenSuccess").classList.add("active");
+      } catch (err) {
+        console.error(err);
+        showToast("Error al guardar. Revisa la consola.");
+      } finally {
+        btn.classList.remove("loading");
+        btn.disabled = false;
+      }
+    });
 
 </script>
 
